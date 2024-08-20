@@ -1,3 +1,6 @@
+ARG FROM_IMAGE_NAME
+ARG FROM_IMAGE_TAG
+
 FROM ${FROM_IMAGE_NAME}:${FROM_IMAGE_TAG}
 
 # Set version as a build argument
