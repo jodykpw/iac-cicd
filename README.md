@@ -39,6 +39,10 @@ The `Dockerfile` in this repository is designed to create a Docker image based o
 - TFLint
 - Gitleaks
 - checkov
+- yamllint
+- yamlfmt
+- ansible
+- ansible-lint
 
 You can customise the versions of these tools by providing build arguments when building the Docker image.
 
@@ -156,7 +160,7 @@ Example:
 ```
 default:
   image:
-    name: gitlab-registry.domain.com/container/iac-cicd:1.0.0
+    name: gitlab-registry.domain.com/container/iac-cicd:1.1.0
     entrypoint: [""]
 ```
 

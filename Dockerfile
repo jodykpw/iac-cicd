@@ -10,16 +10,13 @@ ARG TERRAGRUNT_VERSION
 ARG TFSEC_VERSION
 ARG TFLINT_VERSION
 ARG GITLEAKS_VERSION
-
-# Create a non-root user and group
-RUN groupadd -r cicd && useradd -r -g cicd cicd && \
-    id cicd
+ARG YAMLFMT_VERSION
 
 USER root
 
 # Update package lists and install necessary dependencies
 RUN microdnf update -y && \
-    microdnf install -y python3 python3-pip wget unzip diffutils tar gzip && \
+    microdnf install -y python3 python3-pip wget unzip diffutils tar gzip openssh-clients sshpass && \
     microdnf clean all && \
     python3 -m pip install --upgrade pip
 
@@ -51,7 +48,11 @@ RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform
     \
     wget https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz && \
     tar -xzvf gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz && \
-    mv gitleaks /usr/bin/gitleaks
+    mv gitleaks /usr/bin/gitleaks && \
+    \
+    wget https://github.com/google/yamlfmt/releases/download/v${YAMLFMT_VERSION}/yamlfmt_${YAMLFMT_VERSION}_Linux_x86_64.tar.gz && \
+    tar -xzvf yamlfmt_${YAMLFMT_VERSION}_Linux_x86_64.tar.gz && \
+    mv yamlfmt /usr/bin/yamlfmt
 
 # Copy the requirements.txt file to the container's /app directory
 COPY requirements.txt /tmp/requirements.txt
@@ -59,12 +60,17 @@ COPY requirements.txt /tmp/requirements.txt
 # Install packages listed in requirements.txt
 RUN python3 -m pip install -r /tmp/requirements.txt
 
-# Remove unnecessary dependencies (but keep dependencies like git and python3)
-RUN microdnf remove -y wget unzip diffutils tar gzip python3-pip && \
-    microdnf clean all && \
+# Clean up
+RUN microdnf clean all && \
     rm -rf /var/cache/microdnf /tmp/*
 
-# Switch to the non-root user
+# Create a non-root user
+RUN useradd -ms /bin/bash cicd && \
+    mkdir -p /home/cicd/.ssh && \
+    chmod 700 /home/cicd/.ssh && \
+    chown -R cicd:cicd /home/cicd/.ssh
+
+# Set the user to "cicd"
 USER cicd
 
 # Set the default working directory
