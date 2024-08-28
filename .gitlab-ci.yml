@@ -112,14 +112,9 @@ terraform_check:
   image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
   script:
     - terraform --version || echo "Terraform command failed"
-  rules:
-    - if: $CI_COMMIT_TAG
-
-terraform_docs_check:
-  stage: test
-  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
-  script:
     - terraform-docs --version || echo "Terraform Docs command failed"
+    - tflint --version || echo "TFLint command failed"
+    - tfsec --version || echo "tfsec command failed"
   rules:
     - if: $CI_COMMIT_TAG
 
@@ -128,22 +123,6 @@ terragrunt_docs_check:
   image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
   script:
     - terragrunt --version || echo "Terragrunt command failed"
-  rules:
-    - if: $CI_COMMIT_TAG
-
-tfsec_check:
-  stage: test
-  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
-  script:
-    - tfsec --version || echo "tfsec command failed"
-  rules:
-    - if: $CI_COMMIT_TAG
-
-tflint_check:
-  stage: test
-  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
-  script:
-    - tflint --version || echo "TFLint command failed"
   rules:
     - if: $CI_COMMIT_TAG
 
@@ -160,6 +139,15 @@ checkov_check:
   image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
   script:
     - checkov --version || echo "checkov command failed"
+  rules:
+    - if: $CI_COMMIT_TAG
+
+ansible_check:
+  stage: test
+  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
+  script:
+    - ansible --version || echo "ansible command failed"
+    - ansible-lint --version || echo "ansible-lint command failed"
   rules:
     - if: $CI_COMMIT_TAG
 
