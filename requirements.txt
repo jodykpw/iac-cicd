@@ -1,3 +1,4 @@
 checkov
+yamllint
 ansible
 ansible-lint
