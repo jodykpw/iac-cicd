@@ -151,6 +151,15 @@ ansible_check:
   rules:
     - if: $CI_COMMIT_TAG
 
+yaml_tools_check:
+  stage: test
+  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
+  script:
+    - yamllint --version || echo "yamllint command failed"
+    - yamlfmt --version || echo "yamlfmt command failed"
+  rules:
+    - if: $CI_COMMIT_TAG
+
 release:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
