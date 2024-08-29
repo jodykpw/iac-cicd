@@ -160,7 +160,7 @@ Example:
 ```
 default:
   image:
-    name: gitlab-registry.domain.com/container/iac-cicd:1.1.0
+    name: gitlab-registry.domain.com/container/iac-cicd:1.1.1
     entrypoint: [""]
 ```
 

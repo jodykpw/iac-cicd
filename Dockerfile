@@ -64,8 +64,8 @@ RUN python3 -m pip install -r /tmp/requirements.txt
 RUN microdnf clean all && \
     rm -rf /var/cache/microdnf /tmp/*
 
-# Create a non-root user
-RUN useradd -ms /bin/bash cicd && \
+# Create a non-root user and group with UID and GID
+RUN groupadd -g 10000 cicd && useradd -u 10000 -g cicd -ms /bin/bash cicd && \
     mkdir -p /home/cicd/.ssh && \
     chmod 700 /home/cicd/.ssh && \
     chown -R cicd:cicd /home/cicd/.ssh
